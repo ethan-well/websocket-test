@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Chat Room</h1>
+  <input id="message" />
+  <div id="room"></div>
+
+  <script>
+    var EventUtil = {
+      addHandler: function(element, type, handler) {
+        if (element.addEventListener) {
+          element.addEventListener(type, handler);
+        } else if (element.attachEvent) {
+          element.attachEvent('on' + type, handler);
+        } else {
+          element['on' + type] = handler;
+        }
+      },
+      getTarget: function(event) {
+        return event.target || window.srcElement;
+      },
+      getEvent: function(event) {
+        return event || window.event;
+      }
+    }
+    var websocket = new WebSocket('ws://localhost:8000/');
+    var $roomArea = document.getElementById('room');
+    var $messageInput = document.getElementById("message")
+    function newMessage(message) {
+      var messageArea = document.createElement('div');
+      messageArea.innerHTML = message;
+      $roomArea.appendChild(messageArea);
+    }
+
+    websocket.onopen = function() {
+      newMessage('connected');
+    }
+
+    websocket.onclose = function() {
+      newMessage('websocket close');
+    }
+
+    websocket.onmessage = function(e) {
+      newMessage(e.data);
+    }
+
+    function sendMessasge(event) {
+      var target = EventUtil.getTarget(event);
+      var theEvent = EventUtil.getEvent(event);
+      var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+
+      if (code == 13) {
+        websocket.send(target.value);
+        target.value = '';
+      }
+    }
+
+    EventUtil.addHandler($messageInput, 'keyup', sendMessasge);
+  </script>
+</body>
+</html>
