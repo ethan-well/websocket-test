@@ -1,0 +1,40 @@
+#game {
+  width: 200px;
+  height: 400px;
+  background-color: rgba(192, 210, 243, .2);
+  border-bottom: 1px solid cornflowerblue;
+  border-left: 1px solid cornflowerblue;
+  border-right: 1px solid cornflowerblue;
+  position: absolute;
+  top: 100px;
+}
+
+#slider {
+  width: 80px;
+  height: 80px;
+  border: 1px solid plum;
+  position: absolute;
+  top: 100px;
+  left: 250px;
+}
+
+.none, .current, .down {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  box-sizing: border-box;
+}
+
+.none {
+  background-color: rgba(192, 210, 243, .2);
+}
+
+.current {
+  background-color: plum;
+  border: 1px solid rebeccapurple;
+}
+
+.down {
+  background-color: gray;
+  border: 1px solid black;
+}
