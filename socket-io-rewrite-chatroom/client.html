@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat room</title>
+    <link href="chat.css" rel="stylesheet" type="text/css"/>
+    <script src="socket.io-2.0.3.js"></script>
+  </head>
+
+  <body>
+    <ul id="message">
+      <li>Chat Room</li>
+    </ul>
+    <form id="send-message">
+      <input id="m" autocomplete="off"/>
+      <button>Send</button>
+    </form>
+
+    <script>
+      var EventUtil = {
+        addHandler: function(element, type, handler) {
+          if (element.addEventLisenter) {
+            element.addEventLisenter(type, handler);
+          } else if (element.attachEvent) {
+            element.attachEvent(handler);
+          } else {
+            element['on' + type] = handler;
+          }
+        }
+      }
+      var socket = io();
+      var $form = document.getElementById('send-message');
+      var $input = document.getElementById('m');
+      var $messageArea = document.getElementById('message');
+
+      // send to server
+      EventUtil.addHandler($form, 'submit', function(){
+        socket.emit('chat message', $input.value);
+        $input.value = '';
+        return false;
+      });
+
+      // listen event for server callback
+      socket.on('chat message', function(msg) {
+        var li = document.createElement('li');
+        li.innerText = msg;
+        $messageArea.appendChild(li);
+      });
+    </script>
+  </body>
+</html>
